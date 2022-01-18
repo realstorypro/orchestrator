@@ -1,7 +1,7 @@
 namespace :sync do
 
   desc 'syncs up close.com and customer.io'
-  task sync: :environment do
+  task all: :environment do
     # 1. Sends contacts with 'Needs Nurturing' field set to 'Yes' to customer.io along with 'begin nurture' event
     Rake::Task['close:nurture'].invoke
 
