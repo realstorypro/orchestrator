@@ -1,0 +1,30 @@
+{
+  "query": {
+    "negate": false,
+    "queries": [
+      {
+        "negate": false,
+        "object_type": "contact",
+        "type": "object_type"
+      },
+      {
+        "condition": {
+          "type": "term",
+          "values": [
+            "Yes"
+          ]
+        },
+        "field": {
+          "custom_field_id": "cf_N5Hnzwt4EMcuwGVZkBZuomSVBAMpo07Hzert2hG8QD1",
+          "type": "custom_field"
+        },
+        "negate": false,
+        "type": "field_condition"
+      }
+    ],
+    "type": "and"
+  },
+  "include_counts": true,
+  "_limit": 100,
+  "_fields": {"contact": ["id", "name", "title", "company", "emails", "urls", "custom"]}
+}
