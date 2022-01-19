@@ -141,6 +141,12 @@ class CloseApi
     update('opportunity', opportunity_id, payload)
   end
 
+  # deletes the existing opportunity
+  # @param [Integer] opportunity_id
+  def delete_opportunity(opportunity_id)
+    delete('opportunity', opportunity_id)
+  end
+
   # Finds all opportunities for a given lead
   # @param lead_id [Integer] the id of the lead
   def all_lead_opportunities(lead_id)
@@ -194,6 +200,16 @@ class CloseApi
                    headers: { 'Content-Type' => 'application/json' },
                    body: payload.to_json
                  })
+  end
+
+  # #deletes a singular item
+  # @param [String] kind
+  # @param [Integer] id
+  def delete(kind, id)
+    HTTParty.delete(URI("#{@close_api_base}#{kind}/#{id}/"),
+                    {
+                      headers: { 'Content-Type' => 'application/json' }
+                    })
   end
 
   # fetches all of a kind
