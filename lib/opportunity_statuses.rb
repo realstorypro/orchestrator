@@ -12,14 +12,14 @@ class OpportunityStatuses
       demo_completed: 'stat_tAFzhXiCrkeE0bsqkn8xcUAhHyTeyp6PJuvb5Vjm4ZD',
       proposal_sent: 'stat_OH6GgDhK2uJ1bBySAd0miwsqjcwS5A7vhZRG34ZtsCB',
 
-      ## VIP
-      vip_new: 'stat_5SHe17gOvhXavzSedBXLOdzU9h5WudRDMV5ny3ExDw8',
-      vip_in_sequence: 'stat_Jayydp8IPb0pkN5HepFkjK6qNNqsisSaP4ShvtzNTj2',
-      vip_first_contact: 'stat_CpPzCiBrvDGYFnXVGHPs9tLmJjjOty7qLJzFCMk80jp',
-      vip_phone_call: 'stat_3P2yp1RCvFISf8lf8LJkFjpqpZMseDDE7vvc2OcQdoT',
-      vip_demo: 'stat_MIYuQiAxqx4ABKPRwZ2tC1hDS1F8fYQALajDXEePEp4',
-      vip_waiting: 'stat_1NqYVXzCWNZr1SiRBQnis6vCen9fSdXbV1B6LlMr0oi',
-      vip_lost: 'stat_3hQlDXqXrrPiZm82G9QGVkrV1fDErLWzp2xJ33hiesb'
+      ## VIP (no longer exists)
+      # vip_new: 'stat_5SHe17gOvhXavzSedBXLOdzU9h5WudRDMV5ny3ExDw8',
+      # vip_in_sequence: 'stat_Jayydp8IPb0pkN5HepFkjK6qNNqsisSaP4ShvtzNTj2',
+      # vip_first_contact: 'stat_CpPzCiBrvDGYFnXVGHPs9tLmJjjOty7qLJzFCMk80jp',
+      # vip_phone_call: 'stat_3P2yp1RCvFISf8lf8LJkFjpqpZMseDDE7vvc2OcQdoT',
+      # vip_demo: 'stat_MIYuQiAxqx4ABKPRwZ2tC1hDS1F8fYQALajDXEePEp4',
+      # vip_waiting: 'stat_1NqYVXzCWNZr1SiRBQnis6vCen9fSdXbV1B6LlMr0oi',
+      # vip_lost: 'stat_3hQlDXqXrrPiZm82G9QGVkrV1fDErLWzp2xJ33hiesb'
     }
   end
 
