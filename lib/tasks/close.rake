@@ -351,7 +351,8 @@ namespace :close do
     end
   end
 
-  desc 'sets a point of contact for the opportunity'
+
+  desc "sets a point of contact for the opportunity in status 'ready for sequence'"
   task :set_contact do
     puts '*** Setting Point of Contact for Opportunities ***'
 
@@ -377,19 +378,18 @@ namespace :close do
     end
   end
 
+
+
+
   desc 'subscribe to sequence for events in the ready stage'
   task :subscribe_to_sequence do
-    # Settings for Personal Sequence
-    # sequence_id - seq_7lmdVlbHR2y9rRcGkIbBz0
-    # sender_account_id - emailacct_UUIuo4k4ilPpJnmdC6kbcW6AG9mWcscPKaJQCuIr0T6
-    # sender_name - Michael Few
-    # sender_email - michael@storypro.io
 
+    # Settings for Creator Sequence
     sequence_payload = {
-      sequence_id: 'seq_7lmdVlbHR2y9rRcGkIbBz0',
-      sender_account_id: 'emailacct_UUIuo4k4ilPpJnmdC6kbcW6AG9mWcscPKaJQCuIr0T6',
-      sender_name: 'Michael Few',
-      sender_email: 'michael@storypro.io'
+      sequence_id: 'seq_5N4Ig0PARu1a9py86FHdCE',
+      sender_account_id: 'emailacct_xskT1bmpNx4bHJ9AbbvyFs8SRngN9r5kZ2JXWRTnHv9',
+      sender_name: 'Leonid Medovyy',
+      sender_email: 'leonid@storypro.io'
     }
 
     # sequence_payload['contact_id'] = 'cont_CcGnPF1ua7rIyRTYCjkt0pgeshW6TjS6gWcRZSzgVih'
@@ -415,6 +415,10 @@ namespace :close do
     end
   end
 
+  desc 'get a sender account it'
+  task :sender_id do
+
+  end
 
   def msg_slack(msg)
     HTTParty.post(ENV['SLACK_URL'].to_s, body: { text: msg }.to_json)
