@@ -28,7 +28,7 @@ namespace :sync do
     Rake::Task['close:tag_ready_for_email'].invoke
   end
 
-  desc 'syncs up close.com data'
+  desc 'syncs up customer.io data'
   task customer: :environment do
     # the call to get_segment retrieves a customer, and caches it in the database.
     _unsubscribed = @customer_api.get_segment(6)
