@@ -200,6 +200,8 @@ class CloseApi
                    headers: { 'Content-Type' => 'application/json' },
                    body: payload.to_json
                  })
+  rescue Net::OpenTimeout => e
+    puts "error updating (timeout)", kind, id, payload
   end
 
   # #deletes a singular item

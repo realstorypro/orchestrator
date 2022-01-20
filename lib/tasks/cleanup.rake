@@ -11,6 +11,7 @@ namespace :cleanup do
 
 
   # we are using this to clean up the VIP opportunities pipeline.
+  # NOTE: The VIP pipeline is gone, but I am leaving this here for a reference.
   desc "Delete opportunities (based on their status) and mark attached leads as 'bad fit'."
   task opportunities: :environment do
 
@@ -38,6 +39,7 @@ namespace :cleanup do
   end
 
   # we are using this to move opportunities from 'VIP' to 'Automated' pipelines
+  # NOTE: The VIP pipeline is gone, but I am leaving this here for a reference.
   desc "Move oops between pipelines from 'VIP inbox' to the 'Automated inbox'"
   task move_between_pipelines: :environment do
 

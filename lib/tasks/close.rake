@@ -72,44 +72,23 @@ namespace :close do
           customer_contact['timestamps']['cio_id']
         ).strftime('%m/%d/%Y')
 
+        byebug if customer_email == 'chazz@wisesystems.com'
+
         close_contact = @close_api.find_in_contacts(close_contacts, customer_email)
 
         next unless close_contact
 
-        ### CUSTOM FIELDS
-        # Customer.Io Segment - custom.cf_Rp7Z0tH5Jt2CeVU3uv1q02cRHfoIAl1ub8rDR9AiYHW
-        # Needs Nurturing - custom.cf_N5Hnzwt4EMcuwGVZkBZuomSVBAMpo07Hzert2hG8QD1
-        # Nurture Start Date - custom.cf_xhT1KuDwk1IzhNbtzkKoY9VocISAA29QqPkfmffJPFY
-
         # we only want to sync if the new segment is of a higher rank
-        rank = @customer_api.segment_rank(customer_segment[:number], close_contact['custom.cf_Rp7Z0tH5Jt2CeVU3uv1q02cRHfoIAl1ub8rDR9AiYHW'])
+        rank = @customer_api
+               .segment_rank(customer_segment[:number], close_contact[@fields.get(:customer_segment)])
 
         # we don't want to update anything unless the rank has gone up
         next unless rank == 'superior'
 
-        lead = @close_api.find_lead(close_contact['lead_id'])
-        lead_status = lead['status_label']
-
-        if customer_segment[:add_task] && lead_status != 'Bad Fit'
-          msg_slack "#{customer_segment[:task_message]} #{close_contact['display_name']} (#{close_contact['title']}) [#{lead_status}]"
-
-          task_payload = {
-            "_type": 'lead',
-            "lead_id": close_contact['lead_id'],
-            "assigned_to": 'user_iGM2Ik3TrAjWvGy01ET3vNkdd6nRyTFEw0Qi873OTkf',
-            "text": "#{customer_segment[:task_message]} #{close_contact['display_name']} (#{close_contact['title']}) [#{lead_status}]",
-            "date": (Date.today).strftime('%F'),
-            "is_complete": false
-          }
-
-          @close_api.create_task(task_payload)
-        end
-
-        contact_payload = {
-          'custom.cf_Rp7Z0tH5Jt2CeVU3uv1q02cRHfoIAl1ub8rDR9AiYHW': customer_segment[:name],
-          'custom.cf_N5Hnzwt4EMcuwGVZkBZuomSVBAMpo07Hzert2hG8QD1': customer_segment[:needs_nurturing],
-          'custom.cf_xhT1KuDwk1IzhNbtzkKoY9VocISAA29QqPkfmffJPFY': customer_created_at
-        }
+        contact_payload = {}
+        contact_payload[@fields.get(:customer_segment)] = customer_segment[:name]
+        contact_payload[@fields.get(:needs_nurturing)] = 'No'
+        contact_payload[@fields.get(:nurture_start_date)] = customer_created_at
 
         response = @close_api.update_contact(close_contact['id'], contact_payload)
 
@@ -240,6 +219,44 @@ namespace :close do
   end
 
 
+  desc "sorts opportunities between 'Needs Contacts', 'Nurturing Contacts', and 'Ready for Sequence'"
+  task :sort_opps do
+    contacts = @close_api.all_contacts
+
+    sortable_statuses = []
+    sortable_statuses.push @opp_status.get(:inbox)
+    sortable_statuses.push @opp_status.get(:needs_contacts)
+    sortable_statuses.push @opp_status.get(:nurturing_contacts)
+    sortable_statuses.push @opp_status.get(:retry_sequence)
+
+
+    @close_api.all_opportunities.each do |opportunity|
+      next unless opportunity['status_id'].in?(sortable_statuses)
+
+      lead = @close_api.find_lead(opportunity['lead_id'])
+      ready_decision_makers = @close_api.ready_decision_makers(contacts, lead['id'])
+
+      payload = {}
+
+      # check if the lead has available decision makers
+      payload['status_id'] = if (lead[@fields.get(:available_decision_makers)]).positive?
+                               # decide if we're ready to seq or the lead still needs nurturing
+                               if ready_decision_makers.count.positive?
+                                 @opp_status.get(:ready_for_sequence)
+                               else
+                                 @opp_status.get(:nurturing_contacts)
+                               end
+                             else
+                               # move things over to need contacts since we don't have any decision makers
+                               @opp_status.get(:needs_contacts)
+                             end
+
+      puts "updating: #{opportunity['id']}", payload
+
+      @close_api.update_opportunity(opportunity['id'], payload)
+    end
+  end
+
 
   desc 'move opp to retry if seq is completed'
   task :retry_ops, [:number] => :environment do
@@ -299,6 +316,13 @@ namespace :close do
     end
   end
 
+
+
+
+
+
+
+  # TODO Retire
   desc 'sorts contacts in the retry sequence stage'
   task :sort_retries do
     puts '*** Sorting Retries Opportunity Stage ***'
@@ -330,6 +354,7 @@ namespace :close do
     end
   end
 
+  # TODO Retire
   desc 'plucks nurtured opportunities'
   task :pluck_nurtured do
     puts '*** Plucking Nurtured Opportunities ***'
@@ -378,9 +403,6 @@ namespace :close do
     end
   end
 
-
-
-
   desc 'subscribe to sequence for events in the ready stage'
   task :subscribe_to_sequence do
 
@@ -415,10 +437,6 @@ namespace :close do
     end
   end
 
-  desc 'get a sender account it'
-  task :sender_id do
-
-  end
 
   def msg_slack(msg)
     HTTParty.post(ENV['SLACK_URL'].to_s, body: { text: msg }.to_json)
