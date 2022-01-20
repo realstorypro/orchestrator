@@ -1,2 +1,0 @@
-class CloseCustomer < ApplicationRecord
-end

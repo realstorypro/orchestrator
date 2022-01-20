@@ -34,13 +34,4 @@ namespace :sync do
     _unsubscribed = @customer_api.get_segment(6)
     _active_subscribers = @customer_api.get_segment(7)
   end
-
-  desc 'syncs up close.com data'
-  task close: :environment do
-    close_contacts = @close_api.all_contacts
-    close_contacts.each do |close_contact|
-      contact = CloseCustomer.find_or_create_by(close_id: close_contact['id'])
-      contact.update(data: close_contact)
-    end
-  end
 end
