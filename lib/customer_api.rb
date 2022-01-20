@@ -78,18 +78,15 @@ class CustomerApi
 
   # returns an array of customers based on ids passed
   def get_customers(customer_ids)
-    customer_emails = []
+    customers = []
+
     customer_ids.each do |customer_id|
-      customer_url = URI("#{@customer_api_base}customers/#{customer_id}/attributes")
-      begin
-        customer_email_rsp = HTTParty.get(customer_url, headers: @customer_io_auth)
-        customer_emails << customer_email_rsp.parsed_response['customer']
-      rescue Net::OpenTimeout => e
-        puts "error retrieving customer.io customer with customer_id #{customer_id}"
-      end
+      customer = CioCustomer.find_or_create_by(cio_id: customer_id)
+      customer.remote_sync
+      customers << customer.data['customer']
     end
 
-    customer_emails
+    customers
   end
 
   # decides whether a new segment is superior, inferior or no different

@@ -11,6 +11,7 @@ gem "importmap-rails"
 gem "turbo-rails"
 gem "stimulus-rails"
 gem "jbuilder"
+gem "jsonb_accessor"
 gem "redis", "~> 4.0"
 
 # Reduces boot times through caching; required in config/boot.rb
@@ -26,6 +27,7 @@ gem 'classifier-reborn'
 
 group :development, :test do
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
+  gem "byebug"
   gem 'dotenv-rails'
 end
 

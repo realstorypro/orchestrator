@@ -72,36 +72,34 @@ namespace :close do
           customer_contact['timestamps']['cio_id']
         ).strftime('%m/%d/%Y')
 
-        byebug if customer_email == 'chazz@wisesystems.com'
-
         close_contact = @close_api.find_in_contacts(close_contacts, customer_email)
 
         next unless close_contact
 
-        # we only want to sync if the new segment is of a higher rank
-        rank = @customer_api
-               .segment_rank(customer_segment[:number], close_contact[@fields.get(:customer_segment)])
+        contact_payload = {}
 
-        # we don't want to update anything unless the rank has gone up
+        # we only want to update the customer if the new segment is of a higher rank
+        # this greatly speeds up the updates
+        rank = @customer_api.segment_rank(customer_segment[:number], close_contact[@fields.get(:customer_segment)])
         next unless rank == 'superior'
 
-        contact_payload = {}
         contact_payload[@fields.get(:customer_segment)] = customer_segment[:name]
         contact_payload[@fields.get(:needs_nurturing)] = 'No'
         contact_payload[@fields.get(:nurture_start_date)] = customer_created_at
-
         response = @close_api.update_contact(close_contact['id'], contact_payload)
 
         puts close_contact, customer_created_at, response, '------'
+
 
       end
     end
 
     msg_slack 'preparing to sync customer.io segments to close.com'
 
+    close_contacts = @close_api.all_contacts
+
     @customer_api.segments.each do |segment|
       customer_contacts = @customer_api.get_segment(segment[:number])
-      close_contacts = @close_api.all_contacts
       update_close_contacts(close_contacts, customer_contacts, segment)
     end
   end
