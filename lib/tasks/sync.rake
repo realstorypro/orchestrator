@@ -1,4 +1,7 @@
+require 'close_api'
+
 namespace :sync do
+  @close_api = CloseApi.new
 
   desc 'syncs up close.com and customer.io'
   task all: :environment do
@@ -21,5 +24,14 @@ namespace :sync do
     # 6. Sets 'yes' in 'Ready for Email' based on AI decision using
     # nurture start date, customer segment and if the link was clicked
     Rake::Task['close:tag_ready_for_email'].invoke
+  end
+
+  desc 'syncs up close.com data'
+  task close: :environment do
+    close_contacts = @close_api.all_contacts
+    close_contacts.each do |close_contact|
+      contact = CloseCustomer.find_or_create_by(close_id: close_contact['id'])
+      contact.update(data: close_contact)
+    end
   end
 end

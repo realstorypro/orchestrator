@@ -1,0 +1,2 @@
+class CloseCustomer < ApplicationRecord
+end
