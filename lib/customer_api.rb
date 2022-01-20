@@ -5,56 +5,45 @@ class CustomerApi
     @customer_io_auth = { "Authorization": "Bearer #{ENV['CUSTOMER_IO_API_KEY']}" }
     @customer_api_base = 'https://beta-api.customer.io/v1/api/'
     @segments = [
-      { number: 6,
+      {
+        number: 6,
         name: 'Unsubscribed',
         trumps: true,
-        score: 0,
-        needs_nurturing: 'No',
-        add_task: false,
-        task_message: '' },
-      { number: 7,
+        score: 0
+      },
+      {
+        number: 7,
         name: 'Active Subscribers',
         trumps: false,
-        score: 0,
-        needs_nurturing: 'No',
-        add_task: false,
-        task_message: '' },
-      { number: 12,
+        score: 0
+      },
+      {
+        number: 12,
         name: 'One Email Open',
         trumps: false,
-        score: 0,
-        needs_nurturing: 'No',
-        add_task: false,
-        task_message: '' },
-      { number: 8,
+        score: 0
+      },
+      {
+        number: 8,
         name: 'Two Email Opens',
         trumps: false,
-        score: 2,
-        needs_nurturing: 'No',
-        add_task: false,
-        task_message: 'Two emails opened, consider starting a sequence for' },
-      { number: 13,
+        score: 2
+      },
+      {
+        number: 13,
         name: 'Three Email Opens',
         trumps: false,
-        score: 3,
-        needs_nurturing: 'No',
-        add_task: false,
-        task_message: 'Three emails opened, consider starting a sequence for' },
-      { number: 14,
+        score: 3
+      },
+      {
+        number: 14,
         name: 'Four Email Opens',
         trumps: false,
-        score: 4,
-        needs_nurturing: 'No',
-        add_task: false,
-        task_message: 'Four emails opened, consider starting a sequence for' }
+        score: 4
+      }
     ]
 
-    @link_segment = { number: 10,
-                      name: 'Link Clicked',
-                      trumps: false,
-                      needs_nurturing: 'No',
-                      add_task: true,
-                      task_message: 'Link clicked, consider starting a sequence for' }
+    @link_segment = { number: 10, name: 'Link Clicked', trumps: false }
   end
 
   attr_reader :segments, :link_segment
@@ -92,8 +81,12 @@ class CustomerApi
     customer_emails = []
     customer_ids.each do |customer_id|
       customer_url = URI("#{@customer_api_base}customers/#{customer_id}/attributes")
-      customer_email_rsp = HTTParty.get(customer_url, headers: @customer_io_auth)
-      customer_emails << customer_email_rsp.parsed_response['customer']
+      begin
+        customer_email_rsp = HTTParty.get(customer_url, headers: @customer_io_auth)
+        customer_emails << customer_email_rsp.parsed_response['customer']
+      rescue Net::OpenTimeout => e
+        puts "error retrieving customer.io customer with customer_id #{customer_id}"
+      end
     end
 
     customer_emails

@@ -6,6 +6,7 @@ class CustomFields
     # custom.cf_1LlBnvVqG10AFTlcYqdiJ76WqysEyCGtT5ft0jMwjqu - Clicked Link [Contact] (choice-single) w/ Yes & No
     # custom.cf_q8L95sYE6yARwNMlE1ozCXFzqDr97oQlhy6EqHFtswV - Ready for Email [Contact] (choice-single) w/ Yes & No
     # custom.cf_Rp7Z0tH5Jt2CeVU3uv1q02cRHfoIAl1ub8rDR9AiYHW - Customer.IO segment [Contact] (text)
+    # custom.cf_N5Hnzwt4EMcuwGVZkBZuomSVBAMpo07Hzert2hG8QD1 - Needs Nurturing [Contact] (choice-single)  w/ Yes & No
 
     # custom.cf_He1yXt17QGicc0ZXLm5c813K69CNcKpBqBisz84t1HN - Available decision makers [Lead] (integer)
     # custom.cf_KhipBANwlul9s4rxq1r0Hpw2lOekg4Q73EvyXj46IDQ - Technology [Lead] (choice-single)
@@ -18,6 +19,8 @@ class CustomFields
       clicked_link: 'custom.cf_1LlBnvVqG10AFTlcYqdiJ76WqysEyCGtT5ft0jMwjqu',
       ready_for_email: 'custom.cf_q8L95sYE6yARwNMlE1ozCXFzqDr97oQlhy6EqHFtswV',
       customer_segment: 'custom.cf_Rp7Z0tH5Jt2CeVU3uv1q02cRHfoIAl1ub8rDR9AiYHW',
+      needs_nurturing: 'custom.cf_N5Hnzwt4EMcuwGVZkBZuomSVBAMpo07Hzert2hG8QD1',
+
       available_decision_makers: 'custom.cf_He1yXt17QGicc0ZXLm5c813K69CNcKpBqBisz84t1HN',
       technology: 'custom.cf_KhipBANwlul9s4rxq1r0Hpw2lOekg4Q73EvyXj46IDQ',
       frequency: 'custom.cf_l85fqSolodDAbcfiHDqxGb9fVvsrnQhaMem3VhoPexO'

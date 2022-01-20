@@ -1,6 +1,11 @@
 namespace :sell do
   desc "gets the sales pipeline ready for sales"
   task prepare: :environment do
+    # 1. Sorts the contacts in 'Inbox', 'Needs Contacts', 'Nurturing Contacts' and 'Retry Sequence'
+    # Placing them into the 'Needs Contacts', 'Nurturing Contacts' and 'Ready for Sequence'
+    Rake::Task['close:sort_opps'].invoke
+
+    
   end
 
   desc "subscribes people to the sales sequence"
