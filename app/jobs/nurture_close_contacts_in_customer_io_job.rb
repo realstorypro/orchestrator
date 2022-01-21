@@ -7,7 +7,7 @@ class NurtureCloseContactsInCustomerIoJob < ApplicationJob
   def perform(*args)
     @close_api = CloseApi.new
 
-    msg_slack('nurturing close.com contacts in customer.io')
+    msg_slack('nurturing close contacts in customer.io')
 
     close_contacts = @close_api.all_contacts
 
