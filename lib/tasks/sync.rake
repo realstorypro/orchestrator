@@ -8,10 +8,10 @@ namespace :sync do
   desc 'syncs up close.com and customer.io'
   task all: :environment do
     # 1. Sends contacts with 'Needs Nurturing' field set to 'Yes' to customer.io along with 'begin nurture' event
-    Rake::Task['close:nurture'].invoke
+    Rake::Task['close:nurture_in_customer_io'].invoke
 
-    # 2. Sets the 'Customer.io segment' based on the customer.io data
-    Rake::Task['close:segment_sync'].invoke
+    # 2. Syncs up the data from customer.io in close
+    Rake::Task['close:customer_io_sync'].invoke
 
     # 3. Sets 'yes' in 'Clicked Link' in close.com based on he segment
     Rake::Task['close:tag_link_clickers'].invoke
@@ -28,7 +28,7 @@ namespace :sync do
     Rake::Task['close:tag_ready_for_email'].invoke
   end
 
-  desc 'syncs up customer.io data'
+  desc 'syncs up customer.io data with the database'
   task customer: :environment do
     # the call to get_segment retrieves a customer, and caches it in the database.
     _unsubscribed = @customer_api.get_segment(6)

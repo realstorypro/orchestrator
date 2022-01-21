@@ -113,7 +113,9 @@ class CloseApi
 
   # fetches all contacts
   def all_contacts
-    all('contact')
+    # we are shuffling in case things fail to sync due to timeouts
+    # they will fail to sync out of order, and eventually things will sync up
+    all('contact').shuffle!
   end
 
   # updates existing contact
