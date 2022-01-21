@@ -20,13 +20,18 @@ namespace :close do
   @ai = Ai.new
 
   desc "Sends contacts with 'Needs Nurturing' field set to 'Yes' to customer.io"
-  task :nurture, [:number] => :environment do |_t, _args|
+  task :nurture_in_customer_io, [:number] => :environment do |_t, _args|
     msg_slack 'preparing to nurture close.com contacts in customer.io'
-    close_contacts = @close_api.search('nurture.json')
+    # close_contacts = @close_api.search('nurture.json')
+
+    close_contacts = @close_api.all_contacts
 
     $customerio = Customerio::Client.new(ENV['CUSTOMER_IO_SITE_ID'], ENV['CUSTOMER_IO_KEY'])
 
     close_contacts.each do |contact|
+
+      next unless contact[@fields.get(:needs_nurturing)] == 'Yes'
+
       email = contact['emails'].reject { |c| c['email'].nil? }[0]
       if email.nil?
         msg_slack "#{contact['name']} from doesn't have an email but needs nurturing! Please fix."
@@ -43,7 +48,7 @@ namespace :close do
         url = lead.parsed_response['url']
 
         puts the_email, first_name, last_name, title, company, url
-        puts '----'
+        puts '---- uploading to customer.io from sync----'
 
         $customerio.identify(
           id: the_email,
@@ -63,7 +68,7 @@ namespace :close do
   end
 
   desc 'syncs the segments from customer.io to close.com'
-  task :segment_sync, [:number] => :environment do |_t, _args|
+  task :customer_io_sync, [:number] => :environment do |_t, _args|
     # update close contacts
     def update_close_contacts(close_contacts, customer_contacts, customer_segment)
       customer_contacts.each do |customer_contact|
@@ -86,11 +91,7 @@ namespace :close do
         contact_payload[@fields.get(:customer_segment)] = customer_segment[:name]
         contact_payload[@fields.get(:needs_nurturing)] = 'No'
         contact_payload[@fields.get(:nurture_start_date)] = customer_created_at
-        response = @close_api.update_contact(close_contact['id'], contact_payload)
-
-        puts close_contact, customer_created_at, response, '------'
-
-
+        _response = @close_api.update_contact(close_contact['id'], contact_payload)
       end
     end
 
@@ -119,8 +120,7 @@ namespace :close do
       contact_payload = {}
       contact_payload[@fields.get(:clicked_link)] = 'Yes'
 
-      response = @close_api.update_contact(close_contact['id'], contact_payload)
-      puts response
+      _response = @close_api.update_contact(close_contact['id'], contact_payload)
     end
   end
 
@@ -128,25 +128,26 @@ namespace :close do
   desc 'tag decision makers'
   task :tag_decision_makers => :environment do
 
-     @ai.train_decision_makers
-     contacts = @close_api.all_contacts
-     contacts.each do |contact|
-       next if contact['title'].blank?
+    @ai.train_decision_makers
+    contacts = @close_api.all_contacts
+    contacts.each do |contact|
+      next if contact['title'].blank?
 
-       next unless contact[@fields.get(:decision_maker)].blank?
+      next unless contact[@fields.get(:decision_maker)].blank?
 
-       contact_payload = {}
-       contact_payload[@fields.get(:decision_maker)] = if @ai.decision_maker? contact['title']
-                                                         'Yes'
-                                                       else
-                                                         'No'
-                                                       end
+      contact_payload = {}
+      contact_payload[@fields.get(:decision_maker)] = if @ai.decision_maker? contact['title']
+                                                        'Yes'
+                                                      else
+                                                        'No'
+                                                      end
 
-       @close_api.update_contact(contact['id'], contact_payload)
+      @close_api.update_contact(contact['id'], contact_payload)
 
-       puts "#{contact['title']} - #{@ai.decision_maker?(contact['title'])}", '***'
-     end
-   end
+      # may be useful for debugging in the future
+      # puts "#{contact['title']} - #{@ai.decision_maker?(contact['title'])}", '***'
+    end
+  end
 
   desc 'calculate available decision makers per lead'
   task :calc_decision_makers => :environment do
@@ -211,8 +212,6 @@ namespace :close do
       payload = {}
       payload[@fields.get(:ready_for_email)] = 'Yes'
       @close_api.update_contact(contact['id'], payload)
-
-      puts contact, "****"
     end
   end
 
