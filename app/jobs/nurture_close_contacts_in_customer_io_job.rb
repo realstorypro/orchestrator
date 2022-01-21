@@ -1,4 +1,5 @@
 require 'close_api'
+require 'custom_fields'
 
 # Sends contacts with 'Needs Nurturing' field set to 'Yes' to customer.io
 class NurtureCloseContactsInCustomerIoJob < ApplicationJob
@@ -6,6 +7,7 @@ class NurtureCloseContactsInCustomerIoJob < ApplicationJob
 
   def perform(*args)
     @close_api = CloseApi.new
+    @fields = CustomFields.new
 
     msg_slack('nurturing close contacts in customer.io')
 
