@@ -19,90 +19,10 @@ namespace :close do
   @lead_status = LeadStatuses.new
   @ai = Ai.new
 
-  desc "Sends contacts with 'Needs Nurturing' field set to 'Yes' to customer.io"
-  task :nurture_in_customer_io, [:number] => :environment do |_t, _args|
-    msg_slack 'preparing to nurture close.com contacts in customer.io'
-    # close_contacts = @close_api.search('nurture.json')
-
-    close_contacts = @close_api.all_contacts
-
-    $customerio = Customerio::Client.new(ENV['CUSTOMER_IO_SITE_ID'], ENV['CUSTOMER_IO_KEY'])
-
-    close_contacts.each do |contact|
-
-      next unless contact[@fields.get(:needs_nurturing)] == 'Yes'
-
-      email = contact['emails'].reject { |c| c['email'].nil? }[0]
-      if email.nil?
-        msg_slack "#{contact['name']} from doesn't have an email but needs nurturing! Please fix."
-        next
-      else
-        lead = @close_api.find_lead(contact['lead_id'])
-
-        # assigning email to a new variable to keep things simple
-        the_email = email['email']
-        first_name = contact['name'].split(' ')[0]
-        last_name = contact['name'].split(' ')[1]
-        title = contact['title']
-        company = lead.parsed_response['display_name']
-        url = lead.parsed_response['url']
-
-        puts the_email, first_name, last_name, title, company, url
-        puts '---- uploading to customer.io from sync----'
-
-        $customerio.identify(
-          id: the_email,
-          email: the_email,
-          created_at: (Date.today).strftime('%F'),
-          last_name: last_name,
-          first_name: first_name,
-          title: title,
-          company: company,
-          url: url,
-          source: 'close.com'
-        )
-
-        $customerio.track(the_email, 'begin nurture')
-      end
-    end
-  end
-
   desc 'syncs the segments from customer.io to close.com'
   task :customer_io_sync, [:number] => :environment do |_t, _args|
     # update close contacts
-    def update_close_contacts(close_contacts, customer_contacts, customer_segment)
-      customer_contacts.each do |customer_contact|
-        customer_email = customer_contact['attributes']['email']
-        customer_created_at = Time.at(
-          customer_contact['timestamps']['cio_id']
-        ).strftime('%m/%d/%Y')
 
-        close_contact = @close_api.find_in_contacts(close_contacts, customer_email)
-
-        next unless close_contact
-
-        contact_payload = {}
-
-        # we only want to update the customer if the new segment is of a higher rank
-        # this greatly speeds up the updates
-        rank = @customer_api.segment_rank(customer_segment[:number], close_contact[@fields.get(:customer_segment)])
-        next unless rank == 'superior'
-
-        contact_payload[@fields.get(:customer_segment)] = customer_segment[:name]
-        contact_payload[@fields.get(:needs_nurturing)] = 'No'
-        contact_payload[@fields.get(:nurture_start_date)] = customer_created_at
-        _response = @close_api.update_contact(close_contact['id'], contact_payload)
-      end
-    end
-
-    msg_slack 'preparing to sync customer.io segments to close.com'
-
-    close_contacts = @close_api.all_contacts
-
-    @customer_api.segments.each do |segment|
-      customer_contacts = @customer_api.get_segment(segment[:number])
-      update_close_contacts(close_contacts, customer_contacts, segment)
-    end
   end
 
   # Base this on the Link Clicker Segment
