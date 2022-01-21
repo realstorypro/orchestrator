@@ -1,10 +1,4 @@
-require 'customer_api'
-require 'close_api'
-
 namespace :sync do
-  @close_api = CloseApi.new
-  @customer_api = CustomerApi.new
-
   desc 'syncs up close.com and customer.io'
   task all: :environment do
     # 1. Sends contacts with 'Needs Nurturing' field set to 'Yes' to customer.io along with 'begin nurture' event
@@ -26,12 +20,5 @@ namespace :sync do
     # 6. Sets 'yes' in 'Ready for Email' based on AI decision using
     # nurture start date, customer segment and if the link was clicked
     Rake::Task['close:tag_ready_for_email'].invoke
-  end
-
-  desc 'syncs up customer.io data with the database'
-  task customer: :environment do
-    # the call to get_segment retrieves a customer, and caches it in the database.
-    _unsubscribed = @customer_api.get_segment(6)
-    _active_subscribers = @customer_api.get_segment(7)
   end
 end

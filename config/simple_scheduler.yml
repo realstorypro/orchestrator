@@ -1,0 +1,11 @@
+# Global configuration options. The `queue_ahead` and `tz` options can also be set on each task.
+queue_ahead: 360 # Number of minutes to queue jobs into the future
+queue_name: "default" # The Sidekiq queue name used by SimpleScheduler::FutureJob
+tz: "America/New_York" # The application time zone will be used by default if not set
+
+
+# Runs once every day at 12:00 AM.
+sync_customer_io_segments_job:
+  class: "SyncCustomerIoSegmentsJob"
+  every: "1.minute"
+  at: "12:00"
