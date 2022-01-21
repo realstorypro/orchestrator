@@ -14,7 +14,6 @@ gem "jbuilder"
 gem "jsonb_accessor"
 gem "redis", "~> 4.0"
 gem 'sidekiq'
-gem "simple_scheduler"
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false

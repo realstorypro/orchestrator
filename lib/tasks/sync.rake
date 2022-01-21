@@ -21,4 +21,9 @@ namespace :sync do
     # nurture start date, customer segment and if the link was clicked
     Rake::Task['close:tag_ready_for_email'].invoke
   end
+
+  desc 'enqueues the sync customer_io segment task'
+  task customer_io_segments: :environment do
+    SyncCustomerIoSegmentsJob.perform_later
+  end
 end
