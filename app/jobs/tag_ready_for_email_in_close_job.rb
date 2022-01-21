@@ -1,4 +1,5 @@
 require 'close_api'
+require 'customer_api'
 require 'custom_fields'
 require 'ai'
 
@@ -7,6 +8,7 @@ class TagReadyForEmailInCloseJob < ApplicationJob
 
   def perform(*args)
     @close_api = CloseApi.new
+    @customer_api = CustomerApi.new
     @fields = CustomFields.new
     @ai = Ai.new
 
