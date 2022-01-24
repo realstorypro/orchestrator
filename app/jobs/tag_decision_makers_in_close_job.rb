@@ -18,6 +18,8 @@ class TagDecisionMakersInCloseJob < ApplicationJob
     contacts.each do |contact|
       next if contact['title'].blank?
 
+      # we don't want to override an existing field
+      # this allows us to manually re-tag decision makers based on personal preference
       next unless contact[@fields.get(:decision_maker)].blank?
 
       contact_payload = {}
