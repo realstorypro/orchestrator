@@ -15,11 +15,12 @@ class SequenceContactsInCloseJob < ApplicationJob
     set_point_of_contact
 
     # 2. Subscribe the points of contact in opportunities in the 'read for sequence' status
+    # and moving those contacts to 'In Sales Sequence'
     subscribe_to_sequence
   end
 
   def set_point_of_contact
-    puts '*** Setting point of contact for opportunities ***'
+    msg_slack "Setting point of contact for opportunities in 'Ready for Sequence'"
 
     contacts = @close_api.all_contacts
     @close_api.all_opportunities.each do |opportunity|
@@ -38,12 +39,13 @@ class SequenceContactsInCloseJob < ApplicationJob
       payload = {}
       payload['contact_id'] = picked_decision_maker['id']
 
-      puts "updating: #{opportunity['id']}", payload
       @close_api.update_opportunity(opportunity['id'], payload)
     end
   end
 
   def subscribe_to_sequence
+    msg_slack "Subscribing contacts to sequence and moving opportunities to 'In Sales Sequence'"
+
     # Settings for Creator Sequence
     sequence_payload = {
       sequence_id: 'seq_5N4Ig0PARu1a9py86FHdCE',
