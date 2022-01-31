@@ -1,6 +1,7 @@
 require 'csv'
 require 'classifier-reborn'
 
+# Handles logic behind deciding if the contact is a decision maker
 class Ai
   def initialize
     @decision_makers = 'decision_makers.csv'

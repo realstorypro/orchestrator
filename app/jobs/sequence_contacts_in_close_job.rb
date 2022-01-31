@@ -2,6 +2,7 @@ require 'close_api'
 require 'custom_fields'
 require 'opportunity_statuses'
 
+# Sets the point of contact for an opp and sequences that contact
 class SequenceContactsInCloseJob < ApplicationJob
   queue_as :default
 

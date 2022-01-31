@@ -2,6 +2,7 @@ require 'close_api'
 require 'custom_fields'
 require 'ai'
 
+# Tags decision making contacts
 class TagDecisionMakersInCloseJob < ApplicationJob
   queue_as :default
 

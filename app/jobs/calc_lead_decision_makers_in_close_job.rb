@@ -1,6 +1,7 @@
 require 'close_api'
 require 'custom_fields'
 
+# Calculates the number of decision makers per lead
 class CalcLeadDecisionMakersInCloseJob < ApplicationJob
   queue_as :default
 

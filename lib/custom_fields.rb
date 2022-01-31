@@ -1,3 +1,4 @@
+# Used to lookup close.com custom fields
 class CustomFields
   def initialize
     # custom.cf_xhT1KuDwk1IzhNbtzkKoY9VocISAA29QqPkfmffJPFY - Nurture Start Date [Contact] (date)

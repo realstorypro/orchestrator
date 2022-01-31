@@ -10,3 +10,12 @@ AllCops:
     - 'config/spring.rb'
     - 'config/puma.rb'
 
+Metrics/MethodLength:
+  Enabled: false
+
+Metrics/ClassLength:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+

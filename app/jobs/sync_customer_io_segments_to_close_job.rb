@@ -2,10 +2,10 @@ require 'close_api'
 require 'customer_api'
 require 'custom_fields'
 
+# syncs the segments from customer.io to close.com
 class SyncCustomerIoSegmentsToCloseJob < ApplicationJob
   queue_as :default
 
-  # syncs the segments from customer.io to close.com
   def perform(*_args)
     @close_api = CloseApi.new
     @customer_api = CustomerApi.new

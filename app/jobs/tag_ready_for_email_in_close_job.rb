@@ -3,6 +3,7 @@ require 'customer_api'
 require 'custom_fields'
 require 'ai'
 
+# Tags contacts that are ready for an email
 class TagReadyForEmailInCloseJob < ApplicationJob
   queue_as :default
 

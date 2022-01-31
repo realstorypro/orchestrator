@@ -2,6 +2,7 @@ require 'close_api'
 require 'custom_fields'
 require 'opportunity_statuses'
 
+# Sorts opportunities between pipelines
 class SortOpportunitiesInCloseJob < ApplicationJob
   queue_as :default
 

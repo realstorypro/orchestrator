@@ -11,10 +11,10 @@ class CioCustomer < ApplicationRecord
     sync = true if data.nil?
     sync = true if updated_at < 1.day.ago
 
-    if sync
-      customer_url = URI("#{CUSTOMER_API_BASE}customers/#{cio_id}/attributes")
-      rsp = HTTParty.get(customer_url, headers: CUSTOMER_IO_AUTH)
-      update(data: rsp.parsed_response)
-    end
+    return unless sync
+
+    customer_url = URI("#{CUSTOMER_API_BASE}customers/#{cio_id}/attributes")
+    rsp = HTTParty.get(customer_url, headers: CUSTOMER_IO_AUTH)
+    update(data: rsp.parsed_response)
   end
 end

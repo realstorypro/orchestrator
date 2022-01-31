@@ -1,5 +1,6 @@
 require 'custom_fields'
 
+# Abstracts the access to close API
 class CloseApi
   def initialize
     @fields = CustomFields.new
@@ -203,7 +204,7 @@ class CloseApi
                    headers: { 'Content-Type' => 'application/json' },
                    body: payload.to_json
                  })
-  rescue Net::OpenTimeout => e
+  rescue Net::OpenTimeout => _e
     puts "error updating (timeout)", kind, id, payload
   end
 
