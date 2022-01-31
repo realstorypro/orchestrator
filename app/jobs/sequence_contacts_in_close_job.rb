@@ -19,7 +19,7 @@ class SequenceContactsInCloseJob < ApplicationJob
   end
 
   def set_point_of_contact
-    puts '*** Setting Point of Contact for Opportunities ***'
+    puts '*** Setting point of contact for opportunities ***'
 
     contacts = @close_api.all_contacts
     @close_api.all_opportunities.each do |opportunity|

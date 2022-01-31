@@ -12,7 +12,7 @@ class TagDecisionMakersInCloseJob < ApplicationJob
     @fields = CustomFields.new
     @ai = Ai.new
 
-    msg_slack 'tagging decision makers in close (** Done by AI **)'
+    msg_slack 'Tagging decision makers in close (__Done by AI__)'
 
     @ai.train_decision_makers
     contacts = @close_api.all_contacts

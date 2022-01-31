@@ -2,7 +2,7 @@ require 'close_api'
 require 'customer_api'
 require 'custom_fields'
 
-# Tags contacts who have clicked a link
+# Tags close contacts who have clicked a link (based on customer.io segment)
 class TagLinkClickersInCloseJob < ApplicationJob
   queue_as :default
 
@@ -11,7 +11,7 @@ class TagLinkClickersInCloseJob < ApplicationJob
     @customer_api = CustomerApi.new
     @fields = CustomFields.new
 
-    msg_slack 'tagging close contacts who have clicked a link (based on customer.io segment)'
+    msg_slack 'Tagging Close contacts who have clicked a link'
 
     customer_contacts = @customer_api.get_segment(@customer_api.link_segment[:number])
     close_contacts = @close_api.all_contacts
