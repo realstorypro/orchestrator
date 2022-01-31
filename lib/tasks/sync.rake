@@ -20,6 +20,9 @@ namespace :sync do
     # 6. Sets 'yes' in 'Ready for Email' based on AI decision using
     # nurture start date, customer segment and if the link was clicked
     TagReadyForEmailInCloseJob.perform_later
+
+    # 7. Sorts the contacts in 'Inbox', 'Needs Contacts', 'Nurturing Contacts' and 'Retry Sequence'
+    SortOpportunitiesInCloseJob.perform_later
   end
 
   # we do this separately from other tasks, to speed everything
