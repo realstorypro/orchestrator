@@ -21,7 +21,7 @@ class SortOpportunitiesInCloseJob < ApplicationJob
   end
 
   def sort_sales_pipeline
-    msg_slack 'sorting opportunities in **sales pipeline **'
+    msg_slack "Sorting opportunities in 'Sales' pipeline"
 
     # 1. Lets get all opportunities
     opportunities = @close_api.all_opportunities
@@ -71,7 +71,7 @@ class SortOpportunitiesInCloseJob < ApplicationJob
   end
 
   def sort_other_pipelines
-    msg_slack 'sorting opportunities in **inbox**, **needs contacts**, **nurturing contacts** and **retry sequence**'
+    msg_slack "Sorting opportunities in 'Inbox', 'Needs Contacts', 'Nurturing Contacts' and 'Retry Sequence'"
 
     contacts = @close_api.all_contacts
 

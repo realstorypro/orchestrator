@@ -14,7 +14,7 @@ class NurtureCloseContactsInCustomerIoJob < ApplicationJob
   end
 
   def nurture_contacts
-    msg_slack('nurturing close contacts in customer.io')
+    msg_slack('Nurturing Close contacts in Customer.io')
 
     @close_api.all_contacts.each do |contact|
       next unless contact[@fields.get(:needs_nurturing)] == 'Yes'

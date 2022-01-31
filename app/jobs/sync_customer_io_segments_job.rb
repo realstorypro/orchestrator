@@ -9,7 +9,7 @@ class SyncCustomerIoSegmentsJob < ApplicationJob
     @close_api = CloseApi.new
     @customer_api = CustomerApi.new
 
-    msg_slack('syncing up the customer.io job segments to the orchestrator')
+    msg_slack('Syncing up the Customer.io segments to the orchestrator')
 
     # the call to get_segment retrieves a customer, and caches it in the database.
     _unsubscribed = @customer_api.get_segment(6)

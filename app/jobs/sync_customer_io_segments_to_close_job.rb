@@ -11,7 +11,7 @@ class SyncCustomerIoSegmentsToCloseJob < ApplicationJob
     @customer_api = CustomerApi.new
     @fields = CustomFields.new
 
-    msg_slack 'syncing customer.io segments to close'
+    msg_slack 'Syncing Customer.io segments to Close'
 
     close_contacts = @close_api.all_contacts
 

@@ -9,7 +9,7 @@ class CalcLeadDecisionMakersInCloseJob < ApplicationJob
     @close_api = CloseApi.new
     @fields = CustomFields.new
 
-    msg_slack 'calculating the number of available decision makers for close leads'
+    msg_slack 'Calculating the number of available decision makers for Close leads'
 
     leads = @close_api.all_leads
     contacts = @close_api.all_contacts
