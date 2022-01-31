@@ -20,12 +20,12 @@ namespace :ai do
     CSV.open("#{export_folder}/decision-training.csv", 'w') do |csv|
       csv << headers
       weeks_old.each do |week|
-        segment.each do |segment|
+        segment.each do |seg_number|
           clicks.each do |click|
             visited_webiste.each do |v_website|
               visited_pricing_page.each do |v_pricing|
-                puts "week #{week} | segment #{segment} | click #{click} | website #{v_website} | pricing #{v_pricing}"
-                csv << [week, segment, click, v_website, v_pricing]
+                puts "week #{week} | segment #{seg_number} | click #{click} | website #{v_website} | pricing #{v_pricing}"
+                csv << [week, seg_number, click, v_website, v_pricing]
               end
             end
           end
