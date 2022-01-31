@@ -13,7 +13,7 @@ class TagReadyForEmailInCloseJob < ApplicationJob
     @fields = CustomFields.new
     @ai = Ai.new
 
-    msg_slack 'Tagging close contacts who are ready for email (__Done by AI__)'
+    msg_slack 'Tagging close contacts who are ready for email'
 
     contacts = @close_api.all_contacts
     contacts.each do |contact|
