@@ -30,11 +30,11 @@ class Ai
     parsed_data = CSV.parse(training_data, headers: true)
 
     parsed_data.each do |row|
-      @sequence_inputs.push ([row['weeks old'].to_i,
-                              row['segment'].to_i,
-                              yes_no(row['clicked_link']),
-                              yes_no(row['visited_website']),
-                              yes_no(row['visited pricing page'])])
+      @sequence_inputs.push([row['weeks old'].to_i,
+                             row['segment'].to_i,
+                             yes_no(row['clicked_link']),
+                             yes_no(row['visited_website']),
+                             yes_no(row['visited pricing page'])])
 
       case row['sequence']
       when 'x'
@@ -79,5 +79,4 @@ class Ai
       0.to_i
     end
   end
-
 end

@@ -128,7 +128,4 @@ class CustomerApi
     segment = @segments.find { |segment| segment[:name] == segment_name }
     segment[:score]
   end
-
-
-
 end

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 namespace :close do
   desc 'syncs up close.com and customer.io'
   task sync: :environment do

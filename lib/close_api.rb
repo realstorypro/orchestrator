@@ -44,7 +44,6 @@ class CloseApi
     found
   end
 
-
   # fetches all tasks
   def all_tasks
     all('task')
@@ -54,7 +53,6 @@ class CloseApi
   def create_task(payload)
     create('task', payload)
   end
-
 
   # updates an existing task
   def update_task(id, payload)
@@ -177,8 +175,6 @@ class CloseApi
 
     true
   end
-
-
 
   private
 

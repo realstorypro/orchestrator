@@ -4,7 +4,7 @@ require 'custom_fields'
 class CalcLeadDecisionMakersInCloseJob < ApplicationJob
   queue_as :default
 
-  def perform(*args)
+  def perform(*_args)
     @close_api = CloseApi.new
     @fields = CustomFields.new
 

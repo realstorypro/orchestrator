@@ -6,7 +6,7 @@ namespace :ai do
   list_loc = '/lib/training-templates'
 
   desc 'generates a document to be filled out by a human and used for training data'
-  task :build_decision_maker_list, [:number] => :environment do |_t, args|
+  task :build_decision_maker_list, [:number] => :environment do |_t, _args|
     # set the folder where the import is stored
     export_folder = "#{Dir.pwd}#{list_loc}/"
 
@@ -32,6 +32,5 @@ namespace :ai do
         end
       end
     end
-
   end
 end

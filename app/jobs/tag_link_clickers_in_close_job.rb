@@ -5,7 +5,7 @@ require 'custom_fields'
 class TagLinkClickersInCloseJob < ApplicationJob
   queue_as :default
 
-  def perform(*args)
+  def perform(*_args)
     @close_api = CloseApi.new
     @customer_api = CustomerApi.new
     @fields = CustomFields.new

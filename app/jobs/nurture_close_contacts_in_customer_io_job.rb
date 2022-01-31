@@ -5,7 +5,7 @@ require 'custom_fields'
 class NurtureCloseContactsInCustomerIoJob < ApplicationJob
   queue_as :default
 
-  def perform(*args)
+  def perform(*_args)
     @close_api = CloseApi.new
     @fields = CustomFields.new
 
@@ -16,7 +16,6 @@ class NurtureCloseContactsInCustomerIoJob < ApplicationJob
     $customerio = Customerio::Client.new(ENV['CUSTOMER_IO_SITE_ID'], ENV['CUSTOMER_IO_KEY'])
 
     close_contacts.each do |contact|
-
       next unless contact[@fields.get(:needs_nurturing)] == 'Yes'
 
       email = contact['emails'].reject { |c| c['email'].nil? }[0]

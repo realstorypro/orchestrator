@@ -30,7 +30,6 @@ class SortOpportunitiesInCloseJob < ApplicationJob
 
     # 3. Loop over the opportunities in the 'In Sales' stage
     opportunities.each do |opportunity|
-
       # 4. Get the current contact for the Opportunity
       contact_id = opportunity['contact_id']
 
@@ -80,7 +79,6 @@ class SortOpportunitiesInCloseJob < ApplicationJob
     sortable_statuses.push @opp_status.get(:needs_contacts)
     sortable_statuses.push @opp_status.get(:nurturing_contacts)
     sortable_statuses.push @opp_status.get(:retry_sequence)
-
 
     @close_api.all_opportunities.each do |opportunity|
       next unless opportunity['status_id'].in?(sortable_statuses)
