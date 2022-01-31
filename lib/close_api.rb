@@ -77,6 +77,11 @@ class CloseApi
     all 'sequence_subscription', 'sequence_id': id
   end
 
+  # finds a sequence associated with the contact
+  def find_sequence_by_contact_id(id)
+    all('sequence_subscription', 'contact_id': id)
+  end
+
   ######  **** Leads **** ######
 
   # fetch a singular lead
