@@ -11,7 +11,7 @@ class TagLinkClickersInCloseJob < ApplicationJob
     @customer_api = CustomerApi.new
     @fields = CustomFields.new
 
-    msg_slack 'Tagging Close contacts who have clicked a link'
+    msg_slack 'Tagging Close contacts who have clicked a newsletter link'
 
     customer_contacts = @customer_api.get_segment(@customer_api.link_segment[:number])
     close_contacts = @close_api.all_contacts
