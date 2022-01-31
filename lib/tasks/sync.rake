@@ -7,13 +7,13 @@ namespace :sync do
     # 2. Syncs up the data from customer.io in close
     SyncCustomerIoSegmentsToCloseJob.perform_later
 
-    # 3. Sets 'yes' in 'Clicked Link' in close.com based on he segment
+    # 3. Sets 'Yes' in 'Clicked Link' in close.com based on he segment
     TagLinkClickersInCloseJob.perform_later
 
-    # 4. Sets 'yes' in 'Decision Makers' based on AI decision using job titles
+    # 4. Sets 'Yes' in 'Decision Makers' based on AI decision using job titles
     TagDecisionMakersInCloseJob.perform_later
 
-    # 5. Calculates and sets the 'available decision makers'. The numbers do not include
+    # 5. Calculates and sets the 'Available Decision Makers'. The numbers do not include
     # the decision makers with 'Excluded from sequence' field set to 'Yes'
     CalcLeadDecisionMakersInCloseJob.perform_later
 
@@ -23,6 +23,9 @@ namespace :sync do
 
     # 7. Sorts the contacts in 'Inbox', 'Needs Contacts', 'Nurturing Contacts' and 'Retry Sequence'
     SortOpportunitiesInCloseJob.perform_later
+
+    # 8. Subscribes contacts to sequence for opportunities in 'Ready For Sequence' status
+    SequenceContactsInCloseJob.perform_later
   end
 
   # we do this separately from other tasks, to speed everything
