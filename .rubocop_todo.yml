@@ -140,6 +140,6 @@ Metrics/BlockLength:
     - 'lib/tasks/cleanup.rake'
     - 'app/jobs/nurture_close_contacts_in_customer_io_job.rb'
 
-Metrics/AbcSize:
+Style/NumericPredicate:
   Exclude:
-    -
+    - 'lib/customer_api.rb'
