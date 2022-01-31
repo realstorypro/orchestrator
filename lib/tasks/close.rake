@@ -57,6 +57,62 @@ namespace :close do
     end
   end
 
+  desc "sorts contacts in the 'In Sales Sequence' stage"
+  task :sort_in_sales do
+
+    # 0. Lets get all sequence subscriptions
+    # sales_sequence = 'seq_5N4Ig0PARu1a9py86FHdCE'
+    # sequences = @close_api.all_sequence_subscriptions(sales_sequence)
+
+    # 1. Lets get all opportunities
+    opportunities = @close_api.all_opportunities
+
+    # 2. Select opportunities in the 'In Sales' stage
+    opportunities.select! { |o| o['status_id'] == @opp_status.get(:in_sales_sequence) }
+
+    # 3. Loop over the opportunities in the 'In Sales' stage
+    opportunities.each do |opportunity|
+
+      # 4. Get the current contact for the Opportunity
+      contact_id = opportunity['contact_id']
+
+      # 5. Get the sequence subscriptions associated with the contact
+      sequences = @close_api.find_sequence_by_contact_id(contact_id)
+
+      recycle_opportunity = false
+
+      # 6. Search through the sequences associated w/ the opportunity
+      # and determine if the opportunity needs to be recycled
+      sequences.each do |sequence|
+        date_updated = DateTime.parse(sequence['date_updated'])
+        date_difference = date_updated.step(Date.today).count
+
+        # 6.1 We are only looking at sequences older then 4 and less then 10 days
+        next unless date_difference > 3 && date_difference < 10
+
+        # 6.2 We want everything but the sequences in active status
+        next if sequence['status'].in? %w[active]
+
+        recycle_opportunity = true
+      end
+
+      next unless recycle_opportunity
+
+      # 7. set the contact to the do not sequence
+      contact_payload = {}
+      contact_payload[@fields.get(:excluded_from_sequence)] = 'Yes'
+
+      @close_api.update_contact contact_id, contact_payload
+
+      # 8. Set opportunity status to retry
+      opportunity_payload = {}
+      opportunity_payload['status_id'] = @opp_status.get(:retry_sequence)
+
+      @close_api.update_opportunity opportunity['id'], opportunity_payload
+    end
+
+  end
+
 
   desc 'move opp to retry if seq is completed'
   task :retry_ops, [:number] => :environment do
@@ -103,12 +159,12 @@ namespace :close do
         next if date_difference < 5
 
         # 11. update opportunity status to 'retry' stage
-        @close_api.update_opportunity opportunity['id'],
-                                      "status_id": 'stat_EZlDvFrb9F9jj93Okls3fBQAWGTS2LcrMoeKmE4kqRR'
+        # @close_api.update_opportunity opportunity['id'],
+        #                               "status_id": 'stat_EZlDvFrb9F9jj93Okls3fBQAWGTS2LcrMoeKmE4kqRR'
 
         # 12. set the contact to the do not sequence
-        @close_api.update_contact contact['id'],
-                                  "custom.cf_iuK23d7LKjVFuR9z52ddWRHEjCkkHZ23xCRzLvGIP83": 'Yes'
+        # @close_api.update_contact contact['id'],
+        #                           "custom.cf_iuK23d7LKjVFuR9z52ddWRHEjCkkHZ23xCRzLvGIP83": 'Yes'
 
         puts opportunity, subscription, '****'
       end
@@ -152,9 +208,6 @@ namespace :close do
       sender_name: 'Leonid Medovyy',
       sender_email: 'leonid@storypro.io'
     }
-
-    # sequence_payload['contact_id'] = 'cont_CcGnPF1ua7rIyRTYCjkt0pgeshW6TjS6gWcRZSzgVih'
-    # sequence_payload['contact_email'] = 'leonid@storypro.io'
 
     @close_api.all_opportunities.each do |opportunity|
       next unless opportunity['status_id'] == @opp_status.get(:ready_for_sequence)
