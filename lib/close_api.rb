@@ -1,5 +1,6 @@
 require 'custom_fields'
 
+# Abstracts the access to close API
 class CloseApi
   def initialize
     @fields = CustomFields.new
@@ -44,7 +45,6 @@ class CloseApi
     found
   end
 
-
   # fetches all tasks
   def all_tasks
     all('task')
@@ -54,7 +54,6 @@ class CloseApi
   def create_task(payload)
     create('task', payload)
   end
-
 
   # updates an existing task
   def update_task(id, payload)
@@ -178,8 +177,6 @@ class CloseApi
     true
   end
 
-
-
   private
 
   # Retrieves a singular item of a particular find
@@ -207,7 +204,7 @@ class CloseApi
                    headers: { 'Content-Type' => 'application/json' },
                    body: payload.to_json
                  })
-  rescue Net::OpenTimeout => e
+  rescue Net::OpenTimeout => _e
     puts "error updating (timeout)", kind, id, payload
   end
 

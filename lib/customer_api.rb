@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Abstracts access to customer API
 class CustomerApi
   def initialize
     @customer_io_auth = { "Authorization": "Bearer #{ENV['CUSTOMER_IO_API_KEY']}" }
@@ -61,7 +62,7 @@ class CustomerApi
     next_page = 0
     until next_page.blank?
       # do not paginate if we are just getting started
-      paginated_customer_io_url = if next_page == 0
+      paginated_customer_io_url = if next_page.zero?
                                     URI(customer_io_url)
                                   else
                                     URI("#{customer_io_url}?start=#{next_page}")
@@ -125,10 +126,7 @@ class CustomerApi
 
   # @param segment_name [String] a name stored in Close.IO segment
   def get_segment_score(segment_name)
-    segment = @segments.find { |segment| segment[:name] == segment_name }
+    segment = @segments.find { |s| s[:name] == segment_name }
     segment[:score]
   end
-
-
-
 end

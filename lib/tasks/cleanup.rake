@@ -9,12 +9,10 @@ namespace :cleanup do
   @opp_status = OpportunityStatuses.new
   @lead_status = LeadStatuses.new
 
-
   # we are using this to clean up the VIP opportunities pipeline.
   # NOTE: The VIP pipeline is gone, but I am leaving this here for a reference.
   desc "Delete opportunities (based on their status) and mark attached leads as 'bad fit'."
   task opportunities: :environment do
-
     # throwing in a guard clause to prevent this from running
     return true
 
@@ -24,7 +22,6 @@ namespace :cleanup do
     lost_opp_statuses.push @opp_status.get(:vip_demo)
     lost_opp_statuses.push @opp_status.get(:vip_first_contact)
     lost_opp_statuses.push @opp_status.get(:vip_in_sequence)
-
 
     @close_api.all_opportunities.each do |opportunity|
       next unless opportunity['status_id'].in?(lost_opp_statuses)
@@ -42,7 +39,6 @@ namespace :cleanup do
   # NOTE: The VIP pipeline is gone, but I am leaving this here for a reference.
   desc "Move oops between pipelines from 'VIP inbox' to the 'Automated inbox'"
   task move_between_pipelines: :environment do
-
     # throwing in a guard clause to prevent this from running
     return true
 
@@ -57,5 +53,4 @@ namespace :cleanup do
       puts opportunity, payload
     end
   end
-
 end

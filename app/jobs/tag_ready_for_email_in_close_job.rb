@@ -3,10 +3,11 @@ require 'customer_api'
 require 'custom_fields'
 require 'ai'
 
+# Tags contacts that are ready for an email
 class TagReadyForEmailInCloseJob < ApplicationJob
   queue_as :default
 
-  def perform(*args)
+  def perform(*_args)
     @close_api = CloseApi.new
     @customer_api = CustomerApi.new
     @fields = CustomFields.new

@@ -1,1 +1,21 @@
 inherit_from: .rubocop_todo.yml
+
+AllCops:
+  NewCops: disable
+  Exclude:
+    - 'vendor/**/*'
+    - 'node_modules/**/*'
+    - 'db/**/*'
+    - 'bin/**/*'
+    - 'config/spring.rb'
+    - 'config/puma.rb'
+
+Metrics/MethodLength:
+  Enabled: false
+
+Metrics/ClassLength:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+

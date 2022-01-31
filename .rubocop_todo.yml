@@ -49,11 +49,6 @@ Metrics/CyclomaticComplexity:
   Max: 9
 
 # Offense count: 1
-# Configuration parameters: CountComments, CountAsOne, ExcludedMethods, IgnoredMethods.
-Metrics/MethodLength:
-  Max: 13
-
-# Offense count: 1
 # Configuration parameters: IgnoredMethods.
 Metrics/PerceivedComplexity:
   Max: 9
@@ -133,3 +128,18 @@ Style/SymbolArray:
 # URISchemes: http, https
 Layout/LineLength:
   Max: 198
+
+
+Lint/UnreachableCode:
+  Exclude:
+    - 'lib/tasks/cleanup.rake'
+
+Metrics/BlockLength:
+  Exclude:
+    - 'lib/tasks/ai.rake'
+    - 'lib/tasks/cleanup.rake'
+    - 'app/jobs/nurture_close_contacts_in_customer_io_job.rb'
+
+Metrics/AbcSize:
+  Exclude:
+    -

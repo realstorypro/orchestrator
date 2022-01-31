@@ -2,11 +2,12 @@ require 'close_api'
 require 'custom_fields'
 require 'ai'
 
+# Tags decision making contacts
 class TagDecisionMakersInCloseJob < ApplicationJob
   queue_as :default
 
   # Use AI, and base the decision on the title
-  def perform(*args)
+  def perform(*_args)
     @close_api = CloseApi.new
     @fields = CustomFields.new
     @ai = Ai.new

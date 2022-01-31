@@ -2,9 +2,9 @@ require 'close_api'
 require 'custom_fields'
 require 'opportunity_statuses'
 
+# Sets the point of contact for an opp and sequences that contact
 class SequenceContactsInCloseJob < ApplicationJob
   queue_as :default
-
 
   def perform(*_args)
     @close_api = CloseApi.new
@@ -44,7 +44,6 @@ class SequenceContactsInCloseJob < ApplicationJob
   end
 
   def subscribe_to_sequence
-
     # Settings for Creator Sequence
     sequence_payload = {
       sequence_id: 'seq_5N4Ig0PARu1a9py86FHdCE',

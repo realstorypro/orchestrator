@@ -1,3 +1,4 @@
+# Used to lookup close.com opportunity statuses
 class OpportunityStatuses
   def initialize
     @statuses = {

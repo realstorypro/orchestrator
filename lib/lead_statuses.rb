@@ -1,3 +1,4 @@
+# Used to lookup close.com lead statuses
 class LeadStatuses
   def initialize
     @statuses = {

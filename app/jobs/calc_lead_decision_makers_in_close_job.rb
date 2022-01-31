@@ -1,10 +1,11 @@
 require 'close_api'
 require 'custom_fields'
 
+# Calculates the number of decision makers per lead
 class CalcLeadDecisionMakersInCloseJob < ApplicationJob
   queue_as :default
 
-  def perform(*args)
+  def perform(*_args)
     @close_api = CloseApi.new
     @fields = CustomFields.new
 
