@@ -8,14 +8,15 @@ class NurtureCloseContactsInCustomerIoJob < ApplicationJob
   def perform(*_args)
     @close_api = CloseApi.new
     @fields = CustomFields.new
+    @customer_io = Customerio::Client.new(ENV['CUSTOMER_IO_SITE_ID'], ENV['CUSTOMER_IO_KEY'])
 
+    nurture_contacts
+  end
+
+  def nurture_contacts
     msg_slack('nurturing close contacts in customer.io')
 
-    close_contacts = @close_api.all_contacts
-
-    $customerio = Customerio::Client.new(ENV['CUSTOMER_IO_SITE_ID'], ENV['CUSTOMER_IO_KEY'])
-
-    close_contacts.each do |contact|
+    @close_api.all_contacts.each do |contact|
       next unless contact[@fields.get(:needs_nurturing)] == 'Yes'
 
       email = contact['emails'].reject { |c| c['email'].nil? }[0]
@@ -36,7 +37,7 @@ class NurtureCloseContactsInCustomerIoJob < ApplicationJob
         puts the_email, first_name, last_name, title, company, url
         puts '---- uploading to customer.io from sync----'
 
-        $customerio.identify(
+        @customer_io.identify(
           id: the_email,
           email: the_email,
           created_at: (Date.today).strftime('%F'),
@@ -48,10 +49,12 @@ class NurtureCloseContactsInCustomerIoJob < ApplicationJob
           source: 'close.com'
         )
 
-        $customerio.track(the_email, 'begin nurture')
+        @customer_io.track(the_email, 'begin nurture')
       end
     end
   end
+
+  private
 
   def msg_slack(msg)
     HTTParty.post(ENV['SLACK_URL'].to_s, body: { text: msg }.to_json)

@@ -138,6 +138,7 @@ Metrics/BlockLength:
   Exclude:
     - 'lib/tasks/ai.rake'
     - 'lib/tasks/cleanup.rake'
+    - 'app/jobs/nurture_close_contacts_in_customer_io_job.rb'
 
 Metrics/AbcSize:
   Exclude:

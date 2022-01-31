@@ -1,3 +1,4 @@
+# Used to speedup interacting w/ Customer.IO (via caching)
 class CioCustomer < ApplicationRecord
   CUSTOMER_IO_AUTH = { "Authorization": "Bearer #{ENV['CUSTOMER_IO_API_KEY']}" }.freeze
   CUSTOMER_API_BASE = 'https://beta-api.customer.io/v1/api/'.freeze

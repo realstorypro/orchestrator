@@ -126,7 +126,7 @@ class CustomerApi
 
   # @param segment_name [String] a name stored in Close.IO segment
   def get_segment_score(segment_name)
-    segment = @segments.find { |segment| segment[:name] == segment_name }
+    segment = @segments.find { |s| s[:name] == segment_name }
     segment[:score]
   end
 end
