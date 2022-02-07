@@ -1,0 +1,78 @@
+{
+    "query": {
+        "negate": false,
+        "queries": [
+            {
+                "negate": false,
+                "object_type": "lead",
+                "type": "object_type"
+            },
+            {
+                "negate": false,
+                "queries": [
+                    {
+                        "negate": false,
+                        "queries": [
+                            {
+                                "condition": {
+                                    "gte": 0,
+                                    "lte": 0,
+                                    "type": "number_range"
+                                },
+                                "field": {
+                                    "field_name": "num_opportunities",
+                                    "object_type": "lead",
+                                    "type": "regular_field"
+                                },
+                                "negate": false,
+                                "type": "field_condition"
+                            }
+                        ],
+                        "type": "and"
+                    },
+                    {
+                        "negate": false,
+                        "queries": [
+                            {
+                                "condition": {
+                                    "gte": 0,
+                                    "lte": 0,
+                                    "type": "number_range"
+                                },
+                                "field": {
+                                    "field_name": "num_sent_emails",
+                                    "object_type": "lead",
+                                    "type": "regular_field"
+                                },
+                                "negate": false,
+                                "type": "field_condition"
+                            },
+                            {
+                                "condition": {
+                                    "object_ids": [
+                                        "stat_JemNT0UgRV1wWyw2mnAt7SdNb4zUCgv4ksbcv2Rr4l3"
+                                    ],
+                                    "reference_type": "status.lead",
+                                    "type": "reference"
+                                },
+                                "field": {
+                                    "field_name": "status_id",
+                                    "object_type": "lead",
+                                    "type": "regular_field"
+                                },
+                                "negate": true,
+                                "type": "field_condition"
+                            }
+                        ],
+                        "type": "and"
+                    }
+                ],
+                "type": "and"
+            }
+        ],
+        "type": "and"
+    },
+    "include_counts": true,
+    "_limit": 100,
+    "_fields": {"lead": ["id", "display_name"]}
+}
