@@ -49,7 +49,7 @@ class SequenceContactsInCloseJob < ApplicationJob
     # Settings for Creator Sequence
     sequence_payload = {
       sequence_id: 'seq_5N4Ig0PARu1a9py86FHdCE',
-      sender_account_id: 'emailacct_xskT1bmpNx4bHJ9AbbvyFs8SRngN9r5kZ2JXWRTnHv9',
+      sender_account_id: 'emailacct_KQGB3NhqvaPlpgBgstCVklFeuajQ3m0Ni5PWyzX7kNY',
       sender_name: 'Leonid Medovyy',
       sender_email: 'leonid@storypro.io'
     }

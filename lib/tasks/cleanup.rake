@@ -53,4 +53,35 @@ namespace :cleanup do
       puts opportunity, payload
     end
   end
+
+  # changes sequence sender email acount
+  desc 'change sending email account account'
+  task change_sending_email_account: :environment do
+
+    # throwing in a guard clause to prevent this from running
+    return true
+
+    # 1. first we find all opportunities
+    @close_api.all_opportunities.each do |opportunity|
+      next unless opportunity['status_id'] == @opp_status.get(:in_sales_sequence)
+
+      # 3. lets grab sequences attached to opp ocontact
+      sequences = @close_api.find_sequence_by_contact_id(opportunity['contact_id'])
+
+      # 4. lets find all sequences associated w/ said contact
+      sequences.each do |sequence|
+        next unless sequence['sender_email'] == 'leonid@storypro.io'
+
+        # 5. lets update the sender account id
+        payload = {
+          'sender_account_id': 'emailacct_KQGB3NhqvaPlpgBgstCVklFeuajQ3m0Ni5PWyzX7kNY'
+        }
+
+        rsp = @close_api.update_sequence(sequence['id'], payload)
+
+        puts rsp
+      end
+
+    end
+  end
 end
