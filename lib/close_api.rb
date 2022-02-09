@@ -81,6 +81,11 @@ class CloseApi
     all('sequence_subscription', 'contact_id': id)
   end
 
+  # updates existing contact
+  def update_sequence(id, payload)
+    update('sequence_subscription', id, payload)
+  end
+
   ######  **** Leads **** ######
 
   # fetch a singular lead
