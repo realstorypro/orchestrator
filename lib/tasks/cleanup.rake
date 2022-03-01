@@ -11,9 +11,6 @@ namespace :cleanup do
 
   desc "Delete opportunities (based on their status) and mark attached leads as 'bad fit'."
   task opportunities: :environment do
-    # throwing in a guard clause to prevent this from running
-    # return true
-
     lost_opp_statuses = []
     lost_opp_statuses.push @opp_status.get(:needs_contacts)
 
