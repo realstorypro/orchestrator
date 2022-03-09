@@ -45,9 +45,10 @@ class CustomerApi
     ]
 
     @link_segment = { number: 10, name: 'Link Clicked', trumps: false }
+    @not_engaged = { number: 20, name: 'Not Engaged', trumps: false }
   end
 
-  attr_reader :segments, :link_segment
+  attr_reader :segments, :link_segment, :not_engaged
 
   # returns an array of contacts from a segment
   # @param [Integer] segment_id an id of the segment
