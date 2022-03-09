@@ -27,6 +27,18 @@ namespace :cleanup do
     end
   end
 
+  desc "delete not engaged contacts in customer.io from leads marked as 'bad fit'"
+  task customer_io_contacts: :environment do
+    customerio = Customerio::Client.new(ENV['CUSTOMER_IO_SITE_ID'], ENV['CUSTOMER_IO_KEY'])
+
+    close_contacts = @close_api.search('bad_fit__not_engaged.json')
+    close_contacts.each do |contact|
+      found_contact = @close_api.find_contact(contact["id"])
+
+      customerio.delete(found_contact["emails"][0]["email"])
+    end
+  end
+
   # we are using this to move opportunities from 'VIP' to 'Automated' pipelines
   # NOTE: The VIP pipeline is gone, but I am leaving this here for a reference.
   desc "Move oops between pipelines from 'VIP inbox' to the 'Automated inbox'"
