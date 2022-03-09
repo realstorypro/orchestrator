@@ -19,6 +19,7 @@ class CustomFields
       excluded_from_sequence: 'custom.cf_iuK23d7LKjVFuR9z52ddWRHEjCkkHZ23xCRzLvGIP83',
       clicked_link: 'custom.cf_1LlBnvVqG10AFTlcYqdiJ76WqysEyCGtT5ft0jMwjqu',
       ready_for_email: 'custom.cf_q8L95sYE6yARwNMlE1ozCXFzqDr97oQlhy6EqHFtswV',
+      not_engaged: 'custom.cf_VImU7puejeNhbTrVKvyPx5QhS9wVawZ0uLFwDYZB35K',
       customer_segment: 'custom.cf_Rp7Z0tH5Jt2CeVU3uv1q02cRHfoIAl1ub8rDR9AiYHW',
       needs_nurturing: 'custom.cf_N5Hnzwt4EMcuwGVZkBZuomSVBAMpo07Hzert2hG8QD1',
 
