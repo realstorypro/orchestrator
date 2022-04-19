@@ -50,8 +50,8 @@ class SequenceContactsInCloseJob < ApplicationJob
     sequence_payload = {
       sequence_id: 'seq_5N4Ig0PARu1a9py86FHdCE',
       sender_account_id: 'emailacct_KQGB3NhqvaPlpgBgstCVklFeuajQ3m0Ni5PWyzX7kNY',
-      sender_name: 'Leonid Medovyy',
-      sender_email: 'leonid@storypro.io'
+      sender_name: 'Leo Medovyy',
+      sender_email: 'leo@storypro.io'
     }
 
     @close_api.all_opportunities.each do |opportunity|
