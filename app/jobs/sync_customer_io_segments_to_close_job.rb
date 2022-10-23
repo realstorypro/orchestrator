@@ -15,7 +15,7 @@ class SyncCustomerIoSegmentsToCloseJob < ApplicationJob
 
     close_contacts = @close_api.all_contacts
 
-    @customer_api.segments.each do |segment|
+    @customer_api.ranked_segments.each do |segment|
       customer_contacts = @customer_api.get_segment(segment[:number])
       update_close_contacts(close_contacts, customer_contacts, segment)
     end
