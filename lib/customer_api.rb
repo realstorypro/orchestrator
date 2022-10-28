@@ -3,9 +3,13 @@
 # Abstracts access to customer API
 class CustomerApi
   def initialize
-    @customer_io_auth = { "Authorization": "Bearer #{ENV['CUSTOMER_IO_API_KEY']}" }
+    @customer_io_api_auth = { "Authorization": "Bearer #{ENV['CUSTOMER_IO_API_KEY']}" }
+
+    @basic_key = Base64.strict_encode64"#{ENV['CUSTOMER_IO_SITE_ID']}:#{ENV['CUSTOMER_IO_TRACKING_API_KEY_']}"
+    @customer_io_basic_auth = { "Authorization": "Basic #{@basic_key}" }
+
     @customer_api_base = 'https://beta-api.customer.io/v1/api/'
-    @segments = [
+    @ranked_segments = [
       {
         number: 6,
         name: 'Unsubscribed',
@@ -48,7 +52,7 @@ class CustomerApi
     @not_engaged = { number: 20, name: 'Not Engaged', trumps: false }
   end
 
-  attr_reader :segments, :link_segment, :not_engaged
+  attr_reader :ranked_segments, :link_segment, :not_engaged
 
   # returns an array of contacts from a segment
   # @param [Integer] segment_id an id of the segment
@@ -68,7 +72,7 @@ class CustomerApi
                                   else
                                     URI("#{customer_io_url}?start=#{next_page}")
                                   end
-      customer_rsp = HTTParty.get(paginated_customer_io_url, headers: @customer_io_auth)
+      customer_rsp = HTTParty.get(paginated_customer_io_url, headers: @customer_io_api_auth)
 
       customers.append(*get_customers(customer_rsp['ids']))
 
@@ -94,21 +98,21 @@ class CustomerApi
   # decides whether a new segment is superior, inferior or no different
   # from the current segment
   def segment_rank(new_segment_id, active_segment_name)
-    current_segment = @segments.select do |segment|
+    current_segment = @ranked_segments.select do |segment|
       segment[:number] == new_segment_id
     end
     current_segment = current_segment.last
 
-    current_segment_index = @segments.index do |segment|
+    current_segment_index = @ranked_segments.index do |segment|
       segment[:number] == new_segment_id
     end
 
-    active_segment = @segments.select do |segment|
+    active_segment = @ranked_segments.select do |segment|
       segment[:name] == active_segment_name
     end
     active_segment = active_segment.last
 
-    active_segment_index = @segments.index do |segment|
+    active_segment_index = @ranked_segments.index do |segment|
       segment[:name] == active_segment_name
     end
 
@@ -127,7 +131,28 @@ class CustomerApi
 
   # @param segment_name [String] a name stored in Close.IO segment
   def get_segment_score(segment_name)
-    segment = @segments.find { |s| s[:name] == segment_name }
+    segment = @ranked_segments.find { |s| s[:name] == segment_name }
     segment[:score]
+  end
+
+  def add_customers_to_segment(segment_id, customer_ids)
+    # this uses a tracking api. we'll refactor once we start using it more.
+    customer_io_url = "https://track.customer.io/api/v1/segments/#{segment_id}/add_customers"
+
+    data = { ids: customer_ids }
+
+    url = URI(customer_io_url)
+    http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    request = Net::HTTP::Post.new(url)
+    request["content-type"] = 'application/json'
+
+    request["Authorization"] = "Basic #{@basic_key}"
+
+    request.body = data.to_json
+
+    response = http.request(request)
+    puts response.read_body
   end
 end
