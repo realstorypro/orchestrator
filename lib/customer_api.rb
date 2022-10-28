@@ -3,7 +3,11 @@
 # Abstracts access to customer API
 class CustomerApi
   def initialize
-    @customer_io_auth = { "Authorization": "Bearer #{ENV['CUSTOMER_IO_API_KEY']}" }
+    @customer_io_api_auth = { "Authorization": "Bearer #{ENV['CUSTOMER_IO_API_KEY']}" }
+
+    @basic_key = Base64.strict_encode64"#{ENV['CUSTOMER_IO_SITE_ID']}:#{ENV['CUSTOMER_IO_TRACKING_API_KEY_']}"
+    @customer_io_basic_auth = { "Authorization": "Basic #{@basic_key}" }
+
     @customer_api_base = 'https://beta-api.customer.io/v1/api/'
     @ranked_segments = [
       {
@@ -68,7 +72,7 @@ class CustomerApi
                                   else
                                     URI("#{customer_io_url}?start=#{next_page}")
                                   end
-      customer_rsp = HTTParty.get(paginated_customer_io_url, headers: @customer_io_auth)
+      customer_rsp = HTTParty.get(paginated_customer_io_url, headers: @customer_io_api_auth)
 
       customers.append(*get_customers(customer_rsp['ids']))
 
@@ -132,12 +136,23 @@ class CustomerApi
   end
 
   def add_customers_to_segment(segment_id, customer_ids)
+    # this uses a tracking api. we'll refactor once we start using it more.
     customer_io_url = "https://track.customer.io/api/v1/segments/#{segment_id}/add_customers"
 
-    data = {
-      ids: customer_ids
-    }
+    data = { ids: customer_ids }
 
-    HTTParty.put(customer_io_url, body: data.to_json, headers: @customer_io_auth)
+    url = URI(customer_io_url)
+    http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    request = Net::HTTP::Post.new(url)
+    request["content-type"] = 'application/json'
+
+    request["Authorization"] = "Basic #{@basic_key}"
+
+    request.body = data.to_json
+
+    response = http.request(request)
+    puts response.read_body
   end
 end

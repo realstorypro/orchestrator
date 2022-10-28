@@ -10,7 +10,7 @@ class CioCustomer < ApplicationRecord
     # 1. the data is nil OR
     # 2 the customer has been updated more then 5 days ago
     sync = true if data.nil?
-    sync = true if updated_at < 5.day.ago
+    sync = true if updated_at < 10.day.ago
 
     return unless sync
 
