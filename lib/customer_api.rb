@@ -5,7 +5,7 @@ class CustomerApi
   def initialize
     @customer_io_api_auth = { "Authorization": "Bearer #{ENV['CUSTOMER_IO_API_KEY']}" }
 
-    @basic_key = Base64.strict_encode64"#{ENV['CUSTOMER_IO_SITE_ID']}:#{ENV['CUSTOMER_IO_TRACKING_API_KEY_']}"
+    @basic_key = Base64.strict_encode64"#{ENV['CUSTOMER_IO_SITE_ID']}:#{ENV['CUSTOMER_IO_TRACKING_API_KEY']}"
     @customer_io_basic_auth = { "Authorization": "Basic #{@basic_key}" }
 
     @customer_api_base = 'https://beta-api.customer.io/v1/api/'
