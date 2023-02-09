@@ -31,4 +31,73 @@ namespace :manual do
       puts rsp
     end
   end
+
+  desc 'resets the excluded_from_sequence tag'
+  task reset_exclude_from_sequence: :environment do
+    @close_api = CloseApi.new
+    contacts = @close_api.all_contacts
+    contacts.each do |contact|
+      contact_payload = {}
+      contact_payload[@fields.get(:excluded_from_sequence)] = 'No'
+
+      @close_api.update_contact contact['id'], contact_payload
+    end
+  end
+
+  desc 'move all opps to inbox (in sales pipeline)'
+  task :move_to_inbox_pipeline, [:number]  => :environment do |_t, args|
+    sortable_statuses = []
+    sortable_statuses.push @opp_status.get(:needs_contacts)
+    sortable_statuses.push @opp_status.get(:nurturing_contacts)
+    sortable_statuses.push @opp_status.get(:retry_sequence)
+    sortable_statuses.push @opp_status.get(:in_sales_sequence)
+
+    to_range = args[:number].to_i
+    opportunities = @close_api.all_opportunities.shuffle
+
+    opportunities[0..to_range].each do |opportunity|
+      next unless opportunity['status_id'].in?(sortable_statuses)
+
+      opportunity_payload = {}
+      opportunity_payload['status_id'] = @opp_status.get(:inbox)
+
+      @close_api.update_opportunity opportunity['id'], opportunity_payload
+    end
+  end
+
+  desc 'moves x amount of of opps from inbox to outbox (waiting pipeline)'
+  task :move_to_outbox_pipeline, [:number]  => :environment do |_t, args|
+    sortable_statuses = []
+    sortable_statuses.push @opp_status.get(:inbox)
+
+    to_range = args[:number].to_i
+    opportunities = @close_api.all_opportunities.shuffle
+
+    opportunities[0..to_range].each do |opportunity|
+      next unless opportunity['status_id'].in?(sortable_statuses)
+
+      opportunity_payload = {}
+      opportunity_payload['status_id'] = @opp_status.get(:outbox)
+
+      @close_api.update_opportunity opportunity['id'], opportunity_payload
+    end
+  end
+
+  desc 'moves x amount of opps from outbox (waiting pipeline) to inbox'
+  task :move_from_outbox_to_inbox, [:number]  => :environment do |_t, args|
+    sortable_statuses = []
+    sortable_statuses.push @opp_status.get(:outbox)
+
+    to_range = args[:number].to_i
+    opportunities = @close_api.all_opportunities.shuffle
+
+    opportunities[0..to_range].each do |opportunity|
+      next unless opportunity['status_id'].in?(sortable_statuses)
+
+      opportunity_payload = {}
+      opportunity_payload['status_id'] = @opp_status.get(:inbox)
+
+      @close_api.update_opportunity opportunity['id'], opportunity_payload
+    end
+  end
 end

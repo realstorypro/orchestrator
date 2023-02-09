@@ -9,7 +9,10 @@ class OpportunityStatuses
       retry_sequence: 'stat_EZlDvFrb9F9jj93Okls3fBQAWGTS2LcrMoeKmE4kqRR',
       ready_for_sequence: 'stat_a2G67goxEN4bi514XKNTvarnHAz9KSXFXZwJRrx4BXQ',
       in_sales_sequence: 'stat_2sDBNOOgHJnpz6MWP6ukMBApCYQxt7m4KRLC76m3nBP',
-      waiting: 'stat_Wd2aVyhht9ZEPaTUPymbn3CrWbuLkiN5qfHKCjvzOqF'
+      waiting: 'stat_Wd2aVyhht9ZEPaTUPymbn3CrWbuLkiN5qfHKCjvzOqF',
+
+      ## Waiting
+      outbox: 'stat_csn1bJL7A7vxarSgtFUUxT8XYEDBQfyhVY41dGyzxBU'
     }
   end
 
