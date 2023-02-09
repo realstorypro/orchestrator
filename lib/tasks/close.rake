@@ -4,22 +4,22 @@ namespace :close do
   desc 'syncs up close.com and customer.io'
   task sync: :environment do
     # 1. Sends contacts with 'Needs Nurturing' field set to 'Yes' to customer.io along with 'begin nurture' event
-    NurtureCloseContactsInCustomerIoJob.perform_later
+    # NurtureCloseContactsInCustomerIoJob.perform_later
 
     # 2. Syncs up the data from customer.io in close
-    SyncCustomerIoSegmentsToCloseJob.perform_later
+    # SyncCustomerIoSegmentsToCloseJob.perform_later
 
     # 3. Populate the Nurture Start Month
-    PopulateNurtureStartMonthJob.perform_later
+    # PopulateNurtureStartMonthJob.perform_later
 
     # 4. Sets 'Yes' in 'Clicked Link' in close.com based on he segment
-    TagLinkClickersInCloseJob.perform_later
+    # TagLinkClickersInCloseJob.perform_later
 
     # 5. Sets 'Yes' in 'Not Engaged' in close.com based on he segment
-    TagNotEngagedInCloseJob.perform_later
+    # TagNotEngagedInCloseJob.perform_later
 
     # 6. Sets 'Yes' in 'Decision Makers' based on AI decision using job titles
-    TagDecisionMakersInCloseJob.perform_later
+    # TagDecisionMakersInCloseJob.perform_later
 
     # 7. Calculates and sets the 'Available Decision Makers'. The numbers do not include
     # the decision makers with 'Excluded from sequence' field set to 'Yes'
