@@ -8,36 +8,16 @@ class TagDecisionMakersInCloseJob < ApplicationJob
 
   # Use AI, and base the decision on the title
   def perform(*_args)
-    @close_api = CloseApi.new
-    @fields = CustomFields.new
     @ai = Ai.new
-
-    msg_slack 'Tagging decision makers in close'
-
     @ai.train_decision_makers
-    contacts = @close_api.all_contacts
-    contacts.each do |contact|
-      next if contact['title'].blank?
 
-      # we don't want to override an existing field
-      # this allows us to manually re-tag decision makers based on personal preference
-      next unless contact[@fields.get(:decision_maker)].blank?
+    Contact.all.each do |contact|
+      next if contact.title.blank?
 
-      contact_payload = {}
-      contact_payload[@fields.get(:decision_maker)] = if @ai.decision_maker? contact['title']
-                                                        'Yes'
-                                                      else
-                                                        'No'
-                                                      end
-
-      @close_api.update_contact(contact['id'], contact_payload)
+      contact.update(decision_maker: true) if @ai.decision_maker?(contact.title)
 
       # may be useful for debugging in the future
-      # puts "#{contact['title']} - #{@ai.decision_maker?(contact['title'])}", '***'
+      puts "#{contact.title} - #{@ai.decision_maker?(contact.title)}", '***'
     end
-  end
-
-  def msg_slack(msg)
-    HTTParty.post(ENV['SLACK_URL'].to_s, body: { text: msg }.to_json)
   end
 end
